@@ -1,2 +1,3 @@
-rootProject.name = 'example-plugin'
-
+rootProject.name = 'fernflower-plugin'
+include 'relocation'
+//project(":recaf-relocation").projectDir = file("./")

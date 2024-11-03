@@ -1,10 +1,10 @@
 plugins {
     id 'java'
     id 'org.openjfx.javafxplugin' version '0.1.0'
-    id 'top.hendrixshen.replace-token'  version '1.1.2'
+    id 'top.hendrixshen.replace-token' version '1.1.2'
 }
 
-group = 'org.example'
+group = 'com.github.meiMingle.recaf-plugin'
 version = '1.0.0'
 
 ext {
@@ -13,7 +13,7 @@ ext {
     // For Recaf versions:
     //  - Releases: https://mvnrepository.com/artifact/software.coley/recaf-core
     //  - Snapshots: https://jitpack.io/#Col-E/Recaf  (see commits tab)
-    recafVersion = '102fa4df1e'
+    recafVersion = '4a58d98b71'
     recafSnapshots = true
 
     // This should point to the full name of the class that 'implements Plugin'
@@ -76,6 +76,7 @@ dependencies {
         implementation "software.coley:recaf-core:${recafVersion}"
         implementation "software.coley:recaf-ui:${recafVersion}"
     }
+    implementation(project(':relocation'))
 
     testImplementation platform('org.junit:junit-bom:5.11.2')
     testImplementation 'org.junit.jupiter:junit-jupiter'
@@ -88,7 +89,7 @@ test {
 // We include the JavaFX plugin to allow you to quickly run Recaf from this project.
 javafx {
     version = '22.0.1'
-    modules = [ 'javafx.base', 'javafx.graphics', 'javafx.controls', 'javafx.media' ]
+    modules = ['javafx.base', 'javafx.graphics', 'javafx.controls', 'javafx.media']
 }
 
 // The replace-token plugin synchronizes our @PluginInformation(version) with our project.version
