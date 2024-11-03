@@ -20,8 +20,8 @@ ext {
     pluginMainClass = 'org.example.plugin.ExamplePlugin'
 
     // These variables will change what plugin information is declared
-    pluginName = 'Example plugin'
-    pluginDesc = 'This example plugin does nothing special, but you can add to it'
+    pluginName = 'Fernflower Plugin'
+    pluginDesc = 'Registers fernflower as an additional decompiler'
     pluginId = group + '.' + project.name
 }
 
@@ -68,6 +68,12 @@ configurations.configureEach {
     exclude group: 'com.ibm.icu'
 }
 
+configurations {
+    bundled
+    bundled.transitive = true
+    bundled.extendsFrom(compileOnly)
+}
+
 dependencies {
     if (recafSnapshots) {
         implementation "com.github.Col-E.Recaf:recaf-core:${recafVersion}"
@@ -76,7 +82,9 @@ dependencies {
         implementation "software.coley:recaf-core:${recafVersion}"
         implementation "software.coley:recaf-ui:${recafVersion}"
     }
+
     implementation(project(':relocation'))
+    bundled(project(':relocation'))
 
     testImplementation platform('org.junit:junit-bom:5.11.2')
     testImplementation 'org.junit.jupiter:junit-jupiter'
@@ -111,7 +119,18 @@ tasks.register('setupServiceEntry') {
         new File(temporaryDir, "META-INF/services/software.coley.recaf.plugin.Plugin").text = project.ext.pluginMainClass
     }
 }
-jar.from(setupServiceEntry)
+
+jar {
+    // We rely on the relocation project being built so we can bundle in fernflower variants
+    dependsOn(':relocation:build')
+
+    from (setupServiceEntry)
+
+    // The way we pull in the relocated classes via the 'bundled' configuration is scuffed
+    // so we will just exclude duplicate entries
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from { configurations.bundled.collect { it.isDirectory() ? it : zipTree(it) }}
+}
 
 // Because all of the necessary dependencies to run Recaf are on the classpath we can make
 // a simple task to run Recaf. We'll have it build our plugin and load it up on startup.

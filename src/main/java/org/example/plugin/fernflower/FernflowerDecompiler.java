@@ -1,8 +1,6 @@
 package org.example.plugin.fernflower;
 
 import jakarta.annotation.Nonnull;
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
 import org.example.plugin.FakeFile;
 import org.example.plugin.Fernflower;
 import recaf.relocation.libs.fernflower.org.jetbrains.java.decompiler.main.decompiler.BaseDecompiler;
@@ -23,7 +21,6 @@ import java.util.Map;
  *
  * @author meiMingle
  */
-@ApplicationScoped
 public class FernflowerDecompiler extends AbstractJvmDecompiler implements Fernflower {
     public static final String NAME = "Fernflower";
     private final FernflowerConfig config;
@@ -34,7 +31,6 @@ public class FernflowerDecompiler extends AbstractJvmDecompiler implements Fernf
      *
      * @param config Decompiler configuration.
      */
-    @Inject
     public FernflowerDecompiler(@Nonnull FernflowerConfig config) {
         // Change this version to be dynamic when / if the Fernflower authors make a function that returns the version...
         super(NAME, "243.21565-EAP-CANDIDATE-SNAPSHOT", config);

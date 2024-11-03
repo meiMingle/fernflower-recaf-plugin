@@ -1,44 +1,37 @@
 package org.example.plugin;
 
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.enterprise.inject.Instance;
 import jakarta.inject.Inject;
+import org.example.plugin.fernflower.FernflowerConfig;
 import org.example.plugin.fernflower.FernflowerDecompiler;
 import org.slf4j.Logger;
 import software.coley.recaf.analytics.logging.Logging;
 import software.coley.recaf.plugin.Plugin;
 import software.coley.recaf.plugin.PluginInformation;
+import software.coley.recaf.services.config.ConfigManager;
 import software.coley.recaf.services.decompile.DecompilerManager;
-import software.coley.recaf.services.decompile.JvmDecompiler;
 
 @ApplicationScoped
-@PluginInformation(id = "fernflower-plugin", version = "1.00", name = "Fernflower Plugin", description = "##DESC##")
+@PluginInformation(id = "##ID##", version = "##VERSION##", name = "##NAME##", description = "##DESC##")
 public class ExamplePlugin implements Plugin {
-	private static final Logger logger = Logging.get(ExamplePlugin.class);
-	private final DecompilerManager decompilerManager;
-	private JvmDecompiler jvmDecompiler = null;
+    private static final Logger logger = Logging.get(ExamplePlugin.class);
+    private final DecompilerManager decompilerManager;
+    private final FernflowerDecompiler fernflower;
 
-	@Inject
-	public ExamplePlugin(DecompilerManager decompileManager, Instance<JvmDecompiler> implementations) {
-		this.decompilerManager = decompileManager;
-		for (JvmDecompiler implementation : implementations) {
-            if (implementation instanceof FernflowerDecompiler fernflowerDecompiler) {
-				jvmDecompiler = fernflowerDecompiler;
-            }
-		}
-	}
+    @Inject
+    public ExamplePlugin(DecompilerManager decompileManager, ConfigManager configManager) {
+        this.decompilerManager = decompileManager;
+        FernflowerConfig fernflowerConfig = new FernflowerConfig();
+        this.fernflower = new FernflowerDecompiler(fernflowerConfig);
+        configManager.registerContainer(fernflowerConfig);
+        decompilerManager.register(fernflower);
+    }
 
-	@Override
-	public void onEnable() {
-		logger.info("Hello from the example plugin");
-		if (jvmDecompiler != null) {
-			decompilerManager.register(jvmDecompiler);
-		}
+    @Override
+    public void onEnable() {
+    }
 
-	}
-
-	@Override
-	public void onDisable() {
-		logger.info("goodbye from the example plugin");
-	}
+    @Override
+    public void onDisable() {
+    }
 }

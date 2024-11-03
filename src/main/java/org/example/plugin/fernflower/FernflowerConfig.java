@@ -24,7 +24,6 @@ import java.util.function.Function;
  *
  * @author meiMingle
  */
-@ApplicationScoped
 @SuppressWarnings("all") // ignore unused refs / typos
 public class FernflowerConfig extends BaseDecompilerConfig {
 
@@ -81,7 +80,6 @@ public class FernflowerConfig extends BaseDecompilerConfig {
     private final ObservableBoolean jpr = new ObservableBoolean(false);
     private final ObservableBoolean sef = new ObservableBoolean(false);
 
-    @Inject
     public FernflowerConfig() {
         super("decompiler-fernflower" + CONFIG_SUFFIX);
         addValue(new BasicConfigValue<>("rbr", boolean.class, rbr));

@@ -177,3 +177,7 @@ dependencies {
     repackage("net.minecraftforge:forgeflower:2.0.674.2")
     api(files(repackage.files))
 }
+
+tasks.jar {
+    from(files(repackage.files).map({ if (it.isDirectory) it else zipTree(it) }))
+}
